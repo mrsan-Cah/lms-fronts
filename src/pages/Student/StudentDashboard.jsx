@@ -8,12 +8,13 @@ import {
   FaCalendarAlt,
   FaIdBadge,
   FaEnvelope,
+  FaSignOutAlt,
   FaBars,
   FaTimes,
 } from "react-icons/fa";
 
 export default function StudentDashboard() {
-  const { studentData } = useContext(StudentAuthContext);
+  const { studentData, setStudentToken } = useContext(StudentAuthContext);
   const navigate = useNavigate();
   const [windowWidth, setWindowWidth] = useState(window.innerWidth);
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -25,6 +26,11 @@ export default function StudentDashboard() {
   }, []);
 
   const isMobile = windowWidth < 768;
+
+  const handleLogout = () => {
+    setStudentToken(null);
+    navigate("/student/login");
+  };
 
   return (
     <div style={styles.container}>
@@ -64,15 +70,31 @@ export default function StudentDashboard() {
           Student Panel
         </h2>
 
-        <div style={{ ...styles.link, ...styles.active }}>
+        <div
+          style={{ ...styles.link, ...styles.active }}
+          onMouseEnter={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.3)"}
+          onMouseLeave={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.25)"}
+        >
           <FaBook style={styles.icon} /> My Details
         </div>
 
         <div
           style={styles.link}
           onClick={() => navigate("/student/notes")}
+          onMouseEnter={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.2)"}
+          onMouseLeave={(e) => e.currentTarget.style.background = "rgba(255,255,255,0.1)"}
         >
           <FaBook style={styles.icon} /> View Notes
+        </div>
+
+        {/* Logout Button */}
+        <div
+          style={styles.logoutBtn}
+          onClick={handleLogout}
+          onMouseEnter={(e) => e.currentTarget.style.background = "#c82333"}
+          onMouseLeave={(e) => e.currentTarget.style.background = "#dc3545"}
+        >
+          <FaSignOutAlt style={styles.icon} /> Logout
         </div>
       </div>
 
@@ -168,9 +190,20 @@ const styles = {
     fontWeight: "700",
     boxShadow: "0 4px 10px rgba(0,0,0,0.15)",
   },
-  linkHover: {
-    background: "rgba(255,255,255,0.2)",
-    transform: "scale(1.02)",
+  logoutBtn: {
+    display: "flex",
+    alignItems: "center",
+    gap: "12px",
+    textDecoration: "none",
+    color: "white",
+    fontSize: "16px",
+    padding: "12px 15px",
+    borderRadius: "10px",
+    background: "#dc3545", // red
+    cursor: "pointer",
+    marginTop: "auto", // stick at bottom
+    fontWeight: 700,
+    transition: "all 0.3s",
   },
   icon: { fontSize: "18px" },
   content: {
