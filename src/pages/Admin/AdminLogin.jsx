@@ -24,87 +24,92 @@ export default function AdminLogin() {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    background: "linear-gradient(135deg, #764ba2, #667eea)",
+    background: "linear-gradient(135deg, #1a1c2c, #373b52)",
     fontFamily: "Poppins, sans-serif",
     position: "relative",
     overflow: "hidden",
   };
 
-  const floatingShape = (size, top, left, bg, rotate = "0deg") => ({
+  const blob = (bg, size, top, left, blur = "80px") => ({
     position: "absolute",
     width: size,
     height: size,
-    borderRadius: "50%",
     background: bg,
-    top: top,
-    left: left,
-    opacity: 0.2,
-    transform: `rotate(${rotate})`,
-    animation: "float 6s ease-in-out infinite alternate",
+    top,
+    left,
+    filter: `blur(${blur})`,
+    borderRadius: "50%",
+    opacity: 0.7,
+    animation: "blobMove 10s infinite alternate ease-in-out",
   });
 
   const cardStyle = {
-    background: "white",
-    padding: "50px 40px",
+    backdropFilter: "blur(15px)",
+    background: "rgba(255, 255, 255, 0.15)",
+    padding: "50px 45px",
     borderRadius: "25px",
-    width: "400px",
-    boxShadow: "0 20px 50px rgba(0,0,0,0.25)",
-    animation: "fadeIn 1s ease",
-    textAlign: "center",
-    zIndex: 10,
+    width: "420px",
+    boxShadow: "0 15px 50px rgba(0,0,0,0.3)",
+    animation: "zoomIn 0.8s ease",
+    border: "1px solid rgba(255,255,255,0.3)",
     position: "relative",
-    overflow: "hidden",
+    zIndex: 10,
+    color: "white",
+    textAlign: "center",
   };
 
   const titleStyle = {
-    fontSize: "34px",
+    fontSize: "36px",
     fontWeight: "700",
-    marginBottom: "30px",
-    letterSpacing: "1px",
-    background: "linear-gradient(45deg, #667eea, #764ba2)",
+    marginBottom: "25px",
+    background: "linear-gradient(45deg, #8bc6ec, #9599e2)",
     WebkitBackgroundClip: "text",
     color: "transparent",
   };
 
   const inputWrapper = {
     position: "relative",
-    margin: "15px 0",
+    margin: "18px 0",
   };
 
   const iconStyle = {
     position: "absolute",
-    left: "12px",
+    left: "14px",
     top: "50%",
     transform: "translateY(-50%)",
-    color: "#667eea",
+    color: "#8bc6ec",
+    fontSize: "18px",
   };
 
   const inputStyle = {
     width: "100%",
-    padding: "12px 12px 12px 40px",
-    borderRadius: "10px",
-    border: "1px solid #ccc",
+    padding: "14px 14px 14px 45px",
+    borderRadius: "12px",
+    border: "1px solid rgba(255,255,255,0.2)",
+    background: "rgba(255,255,255,0.1)",
+    color: "white",
     fontSize: "16px",
     outline: "none",
-    transition: "all 0.3s",
+    transition: "0.3s",
   };
 
   const btnStyle = {
     width: "100%",
     padding: "14px",
-    marginTop: "20px",
+    marginTop: "25px",
     borderRadius: "12px",
-    background: "linear-gradient(45deg, #667eea, #764ba2)",
+    background: "linear-gradient(45deg, #8bc6ec, #9599e2)",
     color: "white",
-    fontSize: "16px",
+    fontSize: "17px",
     border: "none",
     cursor: "pointer",
-    transition: "all 0.3s",
+    transition: "0.4s",
     fontWeight: "600",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     gap: "8px",
+    letterSpacing: "0.5px",
   };
 
   const backBtnStyle = {
@@ -113,54 +118,56 @@ export default function AdminLogin() {
     gap: "6px",
     marginBottom: "20px",
     cursor: "pointer",
-    color: "#667eea",
+    color: "#8bc6ec",
     fontWeight: 600,
     textDecoration: "none",
+    fontSize: "15px",
   };
 
   const registerLinkStyle = {
     marginTop: 15,
     display: "block",
-    color: "#667eea",
+    color: "#8bc6ec",
     fontWeight: 600,
     textDecoration: "none",
   };
 
   return (
     <div style={pageStyle}>
-      {/* Floating Background Shapes */}
-      <div style={floatingShape("150px", "10%", "10%", "#fff")}></div>
-      <div style={floatingShape("100px", "60%", "80%", "#ffeb3b")}></div>
-      <div style={floatingShape("200px", "30%", "70%", "#ff6f61")}></div>
-      <div style={floatingShape("120px", "50%", "20%", "#6fcf97", "45deg")}></div>
-      <div style={floatingShape("80px", "80%", "10%", "#56ccf2", "30deg")}></div>
+      {/* Glowing Background Blobs */}
+      <div style={blob("#8bc6ec", "350px", "10%", "5%")}></div>
+      <div style={blob("#9599e2", "300px", "60%", "70%")}></div>
+      <div style={blob("#fcb045", "250px", "30%", "20%")}></div>
 
       <style>
         {`
+          input:hover {
+            background: rgba(255,255,255,0.18);
+          }
+
           input:focus {
-            border-color: #764ba2 !important;
-            box-shadow: 0 0 10px rgba(102, 126, 234, 0.5);
+            border-color: #8bc6ec;
+            box-shadow: 0 0 10px rgba(139,198,236,0.7);
           }
 
           button:hover {
-            transform: translateY(-2px) scale(1.05);
-            box-shadow: 0 12px 25px rgba(0,0,0,0.25);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.4);
           }
 
           a:hover {
-            color: #4c51bf !important;
+            color: #b0d7ff !important;
             text-decoration: underline !important;
           }
 
-          @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+          @keyframes zoomIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
           }
 
-          @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-15px); }
-            100% { transform: translateY(0px); }
+          @keyframes blobMove {
+            0% { transform: translate(0px); }
+            100% { transform: translate(30px, -30px); }
           }
         `}
       </style>
