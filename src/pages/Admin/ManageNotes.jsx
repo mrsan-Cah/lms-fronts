@@ -17,12 +17,18 @@ import {
   FaLayerGroup,
   FaBookmark,
   FaFilePdf,
+  FaBuilding,
+  FaFileDownload,
+  FaFolderOpen,
+  FaGraduationCap,
+  FaListUl
 } from "react-icons/fa";
 
 export default function ManageNotes() {
   const { adminToken } = useContext(AdminAuthContext);
   const [notes, setNotes] = useState([]);
 
+  const [departmentFilter, setDepartmentFilter] = useState("All");
   const [yearFilter, setYearFilter] = useState("All");
   const [semFilter, setSemFilter] = useState("All");
 
@@ -36,14 +42,15 @@ export default function ManageNotes() {
   }, []);
 
   const filteredNotes = notes.filter((n) => {
+    const matchDept = departmentFilter === "All" || n.department === departmentFilter;
     const matchYear = yearFilter === "All" || n.year == yearFilter;
     const matchSem = semFilter === "All" || n.semester == semFilter;
-    return matchYear && matchSem;
+    return matchDept && matchYear && matchSem;
   });
 
   return (
     <div style={styles.container}>
-      
+
       {/* Sidebar */}
       <div style={styles.sidebar}>
         <h2 style={styles.sidebarTitle}>
@@ -72,7 +79,7 @@ export default function ManageNotes() {
         </Link>
       </div>
 
-      {/* Content Area */}
+      {/* Content */}
       <div style={styles.content}>
         <h2 style={styles.heading}>
           <FaBookmark style={{ marginRight: "10px", color: "#007bff" }} />
@@ -83,9 +90,34 @@ export default function ManageNotes() {
         <div style={styles.filterBox}>
           <FaFilter style={styles.filterIcon} />
 
+          {/* Department Filter */}
           <div style={styles.filterItem}>
             <label style={styles.filterLabel}>
-              <FaCalendarAlt /> Year
+              <FaBuilding /> Department
+            </label>
+
+            <select
+              value={departmentFilter}
+              onChange={(e) => setDepartmentFilter(e.target.value)}
+              style={styles.filterSelect}
+            >
+              <option value="All">All</option>
+              <option value="CSE">CSE</option>
+              <option value="IT">IT</option>
+              <option value="ECE">ECE</option>
+              <option value="ME">ME</option>
+              <option value="EEE">EEE</option>
+              <option value="AIDS">AIDS</option>
+              <option value="CIVIL">CIVIL</option>
+              <option value="AIML">AIML</option>
+              <option value="S&H">S&H</option>
+            </select>
+          </div>
+
+          {/* Year Filter */}
+          <div style={styles.filterItem}>
+            <label style={styles.filterLabel}>
+              <FaGraduationCap /> Year
             </label>
             <select
               value={yearFilter}
@@ -99,9 +131,10 @@ export default function ManageNotes() {
             </select>
           </div>
 
+          {/* Semester Filter */}
           <div style={styles.filterItem}>
             <label style={styles.filterLabel}>
-              <FaCalendarAlt /> Semester
+              <FaListUl /> Semester
             </label>
             <select
               value={semFilter}
@@ -109,7 +142,7 @@ export default function ManageNotes() {
               style={styles.filterSelect}
             >
               <option value="All">All</option>
-              {[1, 2, 3, 4, 5, 6, 7, 8].map((s) => (
+              {[1,2,3,4,5,6,7,8].map((s)=>(
                 <option key={s} value={s}>{s}</option>
               ))}
             </select>
@@ -119,47 +152,50 @@ export default function ManageNotes() {
         {/* Notes Grid */}
         <div style={styles.notesContainer}>
           {filteredNotes.map((n) => (
-            <div
-              key={n._id}
-              style={styles.card}
-              onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
-              onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
-            >
+            <div key={n._id} style={styles.card}>
+
               <h3 style={styles.cardTitle}>
                 <FaFileAlt style={{ color: "#007bff", marginRight: "8px" }} />
                 {n.title}
               </h3>
 
               <p style={styles.cardText}>
-                <FaCalendarAlt style={{ color: "#ff9800", marginRight: "6px" }} />
+                <b>Department:</b> {n.department}
+              </p>
+
+              <p style={styles.cardText}>
                 <b>Year:</b> {n.year}
               </p>
 
               <p style={styles.cardText}>
-                <FaLayerGroup style={{ color: "#9c27b0", marginRight: "6px" }} />
                 <b>Semester:</b> {n.semester}
               </p>
 
+              {/* View File */}
               <a
-                href={`https://lms-back-o5uk.onrender.com/uploads/${n.file}`}
+                href={`https://lms-server-17tl.onrender.com/uploads/${n.file}`}
                 target="_blank"
                 rel="noreferrer"
                 style={styles.fileLink}
-                onMouseEnter={(e) => (e.target.style.color = "#004a99")}
-                onMouseLeave={(e) => (e.target.style.color = "#007bff")}
               >
-                <FaFilePdf style={{ marginRight: "6px" }} />
-                View File →
+                <FaFolderOpen /> Open File
               </a>
 
+              {/* Download File */}
+              <a
+                href={`https://lms-server-17tl.onrender.com/uploads/${n.file}`}
+                download
+                style={styles.downloadBtn}
+              >
+                <FaFileDownload /> Download
+              </a>
+
+              {/* Delete */}
               <button
                 style={styles.deleteBtn}
-                onMouseEnter={(e) => (e.target.style.background = "#b71c1c")}
-                onMouseLeave={(e) => (e.target.style.background = "#d32f2f")}
                 onClick={() => deleteNotes(n._id, adminToken).then(load)}
               >
-                <FaTrash style={{ marginRight: "6px" }} />
-                Delete
+                <FaTrash /> Delete
               </button>
             </div>
           ))}
@@ -180,23 +216,22 @@ const styles = {
 
   sidebar: {
     width: "260px",
-    background: "linear-gradient(180deg, #0a0f24, #0d1131)",
+    background: "linear-gradient(180deg, #0a0f24, #0e1a40)",
     minHeight: "100vh",
-    padding: "30px 22px",
+    padding: "32px 22px",
     position: "fixed",
     top: 0,
     left: 0,
     color: "white",
-    boxShadow: "5px 0 20px rgba(0,0,0,0.4)",
+    boxShadow: "6px 0 25px rgba(0,0,0,0.45)",
   },
 
   sidebarTitle: {
     fontSize: "26px",
-    marginBottom: "35px",
+    marginBottom: "40px",
     textAlign: "center",
     fontWeight: "800",
     letterSpacing: "1px",
-    textTransform: "uppercase",
   },
 
   link: {
@@ -210,7 +245,7 @@ const styles = {
     color: "#d4d4d4",
     fontSize: "16px",
     fontWeight: "500",
-    background: "rgba(255,255,255,0.06)",
+    background: "rgba(255,255,255,0.07)",
     backdropFilter: "blur(6px)",
     transition: "0.3s",
   },
@@ -219,10 +254,10 @@ const styles = {
     background: "#007bff",
     color: "white",
     fontWeight: "700",
-    boxShadow: "0 4px 12px rgba(0,123,255,0.6)",
+    boxShadow: "0 4px 14px rgba(0,123,255,0.7)",
   },
 
-  icon: { fontSize: "18px" },
+  icon: { fontSize: "20px" },
 
   content: {
     flex: 1,
@@ -231,25 +266,25 @@ const styles = {
   },
 
   heading: {
-    fontSize: "36px",
+    fontSize: "38px",
     fontWeight: "800",
-    marginBottom: "28px",
+    marginBottom: "30px",
     color: "#1a1a1a",
   },
 
   filterBox: {
     display: "flex",
     alignItems: "center",
-    gap: "35px",
+    gap: "40px",
     padding: "22px 28px",
     borderRadius: "14px",
-    background: "rgba(255,255,255,0.6)",
+    background: "rgba(255,255,255,0.7)",
     backdropFilter: "blur(12px)",
     marginBottom: "28px",
     boxShadow: "0 10px 25px rgba(0,0,0,0.15)",
   },
 
-  filterIcon: { fontSize: "23px", color: "#1976d2" },
+  filterIcon: { fontSize: "25px", color: "#1976d2" },
 
   filterItem: { display: "flex", flexDirection: "column" },
 
@@ -259,33 +294,35 @@ const styles = {
     fontWeight: "700",
   },
 
-filterSelect: {
-  padding: "10px 12px",
-  fontSize: "15px",
-  fontWeight: "600",
-  borderRadius: "8px",
-  border: "1px solid #1976d2",  // ✅ fixed
-  background: "#ffffff",
-  outline: "none",
-  transition: "0.3s",
-},
+  filterSelect: {
+    padding: "10px 12px",
+    fontSize: "15px",
+    fontWeight: "600",
+    borderRadius: "8px",
+    border: "1px solid #1976d2",
+    background: "white",
+    outline: "none",
+    cursor: "pointer",
+    transition: "0.3s",
+  },
 
   notesContainer: {
     display: "grid",
-    gridTemplateColumns: "repeat(auto-fill, minmax(290px, 1fr))",
+    gridTemplateColumns: "repeat(auto-fill, minmax(320px, 1fr))",
     gap: "26px",
   },
 
   card: {
     background: "white",
     padding: "28px",
-    borderRadius: "16px",
-    boxShadow: "0 12px 26px rgba(0,0,0,0.15)",
+    borderRadius: "18px",
+    boxShadow: "0 12px 28px rgba(0,0,0,0.18)",
     transition: "0.3s",
+    borderLeft: "6px solid #007bff",
   },
 
   cardTitle: {
-    fontSize: "20px",
+    fontSize: "21px",
     fontWeight: "700",
     color: "#2c3e50",
     marginBottom: "12px",
@@ -293,18 +330,31 @@ filterSelect: {
 
   cardText: {
     fontSize: "15px",
-    color: "#555",
+    color: "#444",
     margin: "5px 0",
   },
 
   fileLink: {
     display: "inline-block",
-    marginTop: "10px",
-    marginBottom: "12px",
+    padding: "10px",
+    marginTop: "12px",
+    background: "#eef4ff",
     color: "#007bff",
+    borderRadius: "8px",
     textDecoration: "none",
     fontWeight: "700",
     transition: "0.3s",
+  },
+
+  downloadBtn: {
+    display: "inline-block",
+    padding: "10px",
+    marginTop: "10px",
+    background: "#d1ffd1",
+    color: "green",
+    borderRadius: "8px",
+    fontWeight: "700",
+    textDecoration: "none",
   },
 
   deleteBtn: {
@@ -317,6 +367,7 @@ filterSelect: {
     cursor: "pointer",
     fontWeight: "700",
     fontSize: "15px",
+    marginTop: "14px",
     transition: "0.3s",
   },
 };
