@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API = "https://lms-back-o5uk.onrender.com/api/student";
+const API = "https://lms-server-17tl.onrender.com/api/student";
 
 export const studentLogin = (data) => axios.post(`${API}/login`, data);
 
