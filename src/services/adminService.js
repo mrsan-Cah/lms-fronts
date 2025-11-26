@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API = "https://lms-back-o5uk.onrender.com/api/admin";
+const API = "https://lms-server-17tl.onrender.com/api/admin";
 
 export const adminLogin = (data) => axios.post(`${API}/login`, data);
 export const adminRegister = (data) => axios.post(`${API}/register`, data);
