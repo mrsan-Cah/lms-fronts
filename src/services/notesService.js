@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API = "https://lms-back-o5uk.onrender.com/api/notes";
+const API = "https://lms-server-17tl.onrender.com/api/notes";
 
 export const uploadNotes = (formData, token) =>
   axios.post(`${API}/upload`, formData, {
